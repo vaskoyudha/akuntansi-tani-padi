@@ -38,10 +38,11 @@ def _rp_atau_kosong(nilai):
 # ---------------------------------------------------------------------------
 def render_jurnal_umum(data):
     """Tampilkan jurnal umum murni + badge keseimbangan total debit/kredit."""
-    st.subheader("1. Jurnal Umum")
-    st.caption(
+    ui_helpers.section_header(
+        "Jurnal Umum",
+        "\U0001F4D2",
         "Pencatatan kronologis seluruh transaksi sebelum penyesuaian "
-        f"({len(data['jurnal'])} transaksi)."
+        f"({len(data['jurnal'])} transaksi).",
     )
 
     ui_helpers.tabel_jurnal(data["jurnal"])
@@ -62,8 +63,11 @@ def render_jurnal_umum(data):
 # ---------------------------------------------------------------------------
 def render_buku_besar(data):
     """Tampilkan mutasi & saldo akhir tiap akun (urut by kode), dari engine."""
-    st.subheader("2. Buku Besar")
-    st.caption("Pengelompokan mutasi per akun beserta saldo berjalan.")
+    ui_helpers.section_header(
+        "Buku Besar",
+        "\U0001F4DA",
+        "Pengelompokan mutasi per akun beserta saldo berjalan.",
+    )
 
     besar = acc.buku_besar(data["jurnal"])
 
@@ -88,7 +92,12 @@ def render_buku_besar(data):
                 rows,
                 columns=["Tanggal", "Keterangan", "Debit", "Kredit", "Saldo Berjalan"],
             )
-            st.dataframe(df, hide_index=True, use_container_width=True)
+            st.markdown(
+                ui_helpers.tabel_html(
+                    df, right_cols=["Debit", "Kredit", "Saldo Berjalan"]
+                ),
+                unsafe_allow_html=True,
+            )
 
             col_a, col_b, col_c = st.columns(3)
             with col_a:
@@ -104,8 +113,11 @@ def render_buku_besar(data):
 # ---------------------------------------------------------------------------
 def render_neraca_saldo(data):
     """Tampilkan neraca saldo jurnal umum + badge keseimbangan (52.500.000)."""
-    st.subheader("3. Neraca Saldo")
-    st.caption("Ringkasan saldo seluruh akun; total debit harus sama dengan total kredit.")
+    ui_helpers.section_header(
+        "Neraca Saldo",
+        "\u2696\uFE0F",
+        "Ringkasan saldo seluruh akun; total debit harus sama dengan total kredit.",
+    )
 
     ns = acc.neraca_saldo(data["jurnal"])
     ui_helpers.tabel_neraca_saldo(ns)

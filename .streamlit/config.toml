@@ -2,11 +2,20 @@
 base = "light"
 primaryColor = "#1F7A4D"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F4F7F5"
+secondaryBackgroundColor = "#EEF4F0"
 textColor = "#1A2B23"
 font = "sans serif"
-baseRadius = "8px"
-borderColor = "#D8E2DC"
+baseRadius = "10px"
+borderColor = "#DCE7E0"
+showWidgetBorder = true
+showSidebarBorder = true
+dataframeHeaderBackgroundColor = "#E7F0EA"
+dataframeBorderColor = "#DCE7E0"
+linkColor = "#1F7A4D"
+headingFontWeights = [700, 650, 600]
+
+[theme.sidebar]
+backgroundColor = "#E9F1EC"
 
 [server]
 headless = true

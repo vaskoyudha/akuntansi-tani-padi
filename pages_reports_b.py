@@ -27,7 +27,11 @@ import ui_helpers
 # ---------------------------------------------------------------------------
 def render_jurnal_penyesuaian(data):
     """Tampilkan jurnal penyesuaian akhir periode (AJP) + penjelasannya."""
-    st.subheader("4. Jurnal Penyesuaian")
+    ui_helpers.section_header(
+        "Jurnal Penyesuaian",
+        "\U0001F527",
+        "Penyesuaian akhir periode agar saldo akun mencerminkan kondisi riil.",
+    )
 
     ajp = acc.get_jurnal_penyesuaian()
     ui_helpers.tabel_jurnal(ajp)
@@ -70,7 +74,11 @@ def render_jurnal_penyesuaian(data):
 # ---------------------------------------------------------------------------
 def render_ns_penyesuaian(data):
     """Tampilkan neraca saldo setelah memasukkan jurnal penyesuaian."""
-    st.subheader("5. Neraca Saldo Setelah Penyesuaian")
+    ui_helpers.section_header(
+        "Neraca Saldo Setelah Penyesuaian",
+        "\u2696\uFE0F",
+        "Saldo seluruh akun setelah jurnal penyesuaian diposting.",
+    )
 
     ns = acc.neraca_saldo(data["disesuaikan"])
     ui_helpers.tabel_neraca_saldo(ns)
@@ -93,12 +101,21 @@ def _tabel_lr_section(rows, label_kolom, total):
         label_kolom: acc.format_rupiah(total),
     })
     df = pd.DataFrame(data_rows, columns=["Akun", label_kolom])
-    st.dataframe(df, hide_index=True, use_container_width=True)
+    st.markdown(
+        ui_helpers.tabel_html(
+            df, right_cols=[label_kolom], total_row_label="TOTAL"
+        ),
+        unsafe_allow_html=True,
+    )
 
 
 def render_laba_rugi(data):
     """Tampilkan laporan laba rugi dari jurnal yang sudah disesuaikan."""
-    st.subheader("6. Laporan Laba Rugi")
+    ui_helpers.section_header(
+        "Laporan Laba Rugi",
+        "\U0001F4C8",
+        "Selisih total pendapatan dan total beban periode berjalan.",
+    )
 
     lr = acc.laba_rugi(data["disesuaikan"])
 

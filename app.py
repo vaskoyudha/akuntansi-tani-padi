@@ -14,6 +14,8 @@ Alur:
   gerbang login (render_auth bila belum login) ->
   sidebar (user + logout + menu) -> dispatch ke render halaman terpilih.
 """
+import html
+
 import streamlit as st
 
 import auth
@@ -82,12 +84,27 @@ def _render_sidebar():
     """Render sidebar (sapaan user + tombol logout + menu) → kembalikan pilihan."""
     user = st.session_state.get("user") or {}
     nama = user.get("nama") or user.get("username") or "Petani"
+    nama_safe = html.escape(str(nama))
 
     with st.sidebar:
-        st.markdown("### 🌾 Akuntansi Tani Padi")
-        st.caption(f"Masuk sebagai **{nama}**")
+        st.markdown(
+            f"""
+            <div class="ajp-sidebar-brand">
+                <span class="ajp-sidebar-brand-icon">🌾</span>
+                <span class="ajp-sidebar-brand-text">
+                    <span class="ajp-sidebar-brand-title">Akuntansi Tani Padi</span>
+                    <span class="ajp-sidebar-brand-sub">Usaha Tani Padi</span>
+                </span>
+            </div>
+            <div class="ajp-sidebar-user">
+                <span class="ajp-sidebar-user-glyph">👤</span>
+                <span>Masuk sebagai <strong>{nama_safe}</strong></span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-        if st.button("Keluar", use_container_width=True):
+        if st.button("🚪 Keluar", use_container_width=True):
             st.session_state.clear()
             st.rerun()
 

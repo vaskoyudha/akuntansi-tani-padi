@@ -33,24 +33,34 @@ def render_dashboard(conn, data=None):
     ak = acc.arus_kas(disesuaikan)
     jumlah_transaksi = len(data["jurnal"])
 
-    # --- Header: sambutan + sub-judul -------------------------------------
+    # --- Header: banner berbranding + sambutan ----------------------------
     user = st.session_state.get("user") or {}
     nama = user.get("nama") or user.get("username") or "Petani"
 
+    # Banner = HTML literal STATIS (tanpa interpolasi nilai dinamis) demi
+    # keamanan: unsafe_allow_html mem-bypass escaping.
     st.markdown(
-        f"""
-        <div style="margin-bottom:0.35rem;">
-            <h1 style="margin:0;font-size:1.9rem;font-weight:800;color:#1A2B23;">
+        """
+        <div style="
+            background: linear-gradient(120deg, #1F7A4D 0%, #2E9966 55%, #4FB07C 100%);
+            border-radius: 16px;
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 6px 18px rgba(31,122,77,.22);
+            color: #FFFFFF;
+        ">
+            <h1 style="margin:0;font-size:1.9rem;font-weight:700;color:#FFFFFF;">
                 🌾 Dashboard
             </h1>
-            <p style="margin:0.25rem 0 0;font-size:1.02rem;color:#41584C;">
-                Selamat datang kembali, <strong style="color:#1F7A4D;">{nama}</strong>.
-                Berikut ringkasan keuangan usaha tani padi periode ini.
+            <p style="margin:0.3rem 0 0;font-size:1.02rem;color:#E8F5EE;">
+                Ringkasan keuangan usaha tani padi periode ini.
             </p>
         </div>
         """,
         unsafe_allow_html=True,
     )
+    # Sambutan personal: markdown polos (auto-escape) — nama TIDAK masuk HTML mentah.
+    st.markdown(f"Selamat datang kembali, **{nama}**.")
     st.divider()
 
     # --- Baris 1: empat metrik utama --------------------------------------

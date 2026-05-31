@@ -27,7 +27,11 @@ def render_jurnal_penutup(data):
     Tidak menulis ke DB dan tidak menghitung ulang: data['penutup'] sudah berisi
     hasil acc.jurnal_penutup(disesuaikan).
     """
-    st.subheader("10. Jurnal Penutup")
+    ui_helpers.section_header(
+        "Jurnal Penutup",
+        "\U0001F512",
+        "Memindahkan saldo akun nominal ke modal agar bersaldo nol.",
+    )
     st.markdown(
         "Jurnal penutup memindahkan saldo **akun nominal** (pendapatan, beban, "
         "dan prive) ke modal pada akhir periode, sehingga akun nominal kembali "
@@ -65,7 +69,11 @@ def render_ns_penutupan(data):
     Hanya memuat akun riil (aset, kewajiban, ekuitas); akun nominal sudah
     ditutup ke nol.
     """
-    st.subheader("11. Neraca Saldo Setelah Penutupan")
+    ui_helpers.section_header(
+        "Neraca Saldo Setelah Penutupan",
+        "\u2696\uFE0F",
+        "Hanya akun riil yang tersisa; akun nominal sudah bersaldo nol.",
+    )
     st.markdown(
         "Setelah jurnal penutup diposting, hanya tersisa **akun riil** "
         "(aset, kewajiban, dan ekuitas). Total debit harus tetap sama dengan "

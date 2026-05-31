@@ -24,8 +24,11 @@ import ui_helpers
 # ---------------------------------------------------------------------------
 def render_ekuitas(data):
     """Tampilkan laporan perubahan ekuitas bertingkat dari jurnal disesuaikan."""
-    st.subheader("7. Laporan Perubahan Ekuitas")
-    st.caption("Periode panen 2025 — disusun dari jurnal yang telah disesuaikan.")
+    ui_helpers.section_header(
+        "Laporan Perubahan Ekuitas",
+        "\U0001F4B9",
+        "Periode panen 2025 — disusun dari jurnal yang telah disesuaikan.",
+    )
 
     eq = acc.perubahan_ekuitas(data["disesuaikan"])
 
@@ -36,7 +39,10 @@ def render_ekuitas(data):
         {"Keterangan": "Modal Akhir", "Jumlah": acc.format_rupiah(eq["modal_akhir"])},
     ]
     df = pd.DataFrame(rows, columns=["Keterangan", "Jumlah"])
-    st.dataframe(df, hide_index=True, use_container_width=True)
+    st.markdown(
+        ui_helpers.tabel_html(df, right_cols=["Jumlah"]),
+        unsafe_allow_html=True,
+    )
 
     st.markdown(
         f"<p style='color:#667085;font-size:0.9rem;'>"
@@ -57,8 +63,11 @@ def render_ekuitas(data):
 # ---------------------------------------------------------------------------
 def render_posisi_keuangan(data):
     """Tampilkan neraca dua kolom (Aset | Kewajiban + Ekuitas) + badge seimbang."""
-    st.subheader("8. Laporan Posisi Keuangan (Neraca)")
-    st.caption("Per 30 April 2025 — Aset harus sama dengan Kewajiban + Ekuitas.")
+    ui_helpers.section_header(
+        "Laporan Posisi Keuangan (Neraca)",
+        "\U0001F3DB\uFE0F",
+        "Per 30 April 2025 — Aset harus sama dengan Kewajiban + Ekuitas.",
+    )
 
     pk = acc.posisi_keuangan(data["disesuaikan"])
 
@@ -74,7 +83,12 @@ def render_posisi_keuangan(data):
             {"Akun": "TOTAL ASET", "Jumlah": acc.format_rupiah(pk["total_aset"])}
         )
         df_aset = pd.DataFrame(aset, columns=["Akun", "Jumlah"])
-        st.dataframe(df_aset, hide_index=True, use_container_width=True)
+        st.markdown(
+            ui_helpers.tabel_html(
+                df_aset, right_cols=["Jumlah"], total_row_label="TOTAL ASET"
+            ),
+            unsafe_allow_html=True,
+        )
 
     with kol_kanan:
         st.markdown("**Kewajiban & Ekuitas**")
@@ -92,7 +106,14 @@ def render_posisi_keuangan(data):
             }
         )
         df_kanan = pd.DataFrame(kanan, columns=["Akun", "Jumlah"])
-        st.dataframe(df_kanan, hide_index=True, use_container_width=True)
+        st.markdown(
+            ui_helpers.tabel_html(
+                df_kanan,
+                right_cols=["Jumlah"],
+                total_row_label="TOTAL KEWAJIBAN & EKUITAS",
+            ),
+            unsafe_allow_html=True,
+        )
 
     st.write("")
     ui_helpers.badge_seimbang(pk["total_aset"], pk["total_kewajiban_ekuitas"])
@@ -110,13 +131,19 @@ def _seksi_arus(judul, total, rincian):
     ]
     rows.append({"Keterangan": f"Total {judul}", "Jumlah": acc.format_rupiah(total)})
     df = pd.DataFrame(rows, columns=["Keterangan", "Jumlah"])
-    st.dataframe(df, hide_index=True, use_container_width=True)
+    st.markdown(
+        ui_helpers.tabel_html(df, right_cols=["Jumlah"]),
+        unsafe_allow_html=True,
+    )
 
 
 def render_arus_kas(data):
     """Tampilkan arus kas metode langsung (operasi/pendanaan/investasi) apa adanya."""
-    st.subheader("9. Laporan Arus Kas")
-    st.caption("Metode langsung — klasifikasi mengikuti engine accounting.py.")
+    ui_helpers.section_header(
+        "Laporan Arus Kas",
+        "\U0001F4B5",
+        "Metode langsung — klasifikasi mengikuti engine accounting.py.",
+    )
 
     ak = acc.arus_kas(data["disesuaikan"])
 
@@ -133,7 +160,10 @@ def render_arus_kas(data):
         ],
         columns=["Keterangan", "Jumlah"],
     )
-    st.dataframe(ringkas, hide_index=True, use_container_width=True)
+    st.markdown(
+        ui_helpers.tabel_html(ringkas, right_cols=["Jumlah"]),
+        unsafe_allow_html=True,
+    )
 
     ui_helpers.kartu_statistik(
         "Kas Akhir Periode", acc.format_rupiah(ak["kas_akhir"]), ikon="\U0001F3E6"

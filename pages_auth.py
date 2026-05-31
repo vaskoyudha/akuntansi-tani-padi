@@ -19,9 +19,22 @@ import auth
 # Judul aplikasi (ditampilkan di atas form auth)
 # ---------------------------------------------------------------------------
 def _judul_aplikasi():
-    """Render judul + subjudul ramah di atas form otentikasi."""
-    st.markdown("## 🌾 Akuntansi Usaha Tani Padi")
-    st.caption("Masuk untuk mengelola jurnal dan laporan keuangan usaha tani.")
+    """Render hero berbranding (logo + judul + tagline) di atas form otentikasi.
+
+    HTML bersifat literal statis (tanpa interpolasi nilai dinamis) dan memakai
+    kelas .ajp-auth-* yang didefinisikan di ui_helpers.inject_css().
+    """
+    st.markdown(
+        """
+        <div class="ajp-auth-hero">
+            <div class="ajp-auth-logo">🌾</div>
+            <h1 class="ajp-auth-title">Akuntansi Tani Padi</h1>
+            <p class="ajp-auth-tagline">Sistem Informasi Akuntansi Usaha Tani Padi</p>
+            <div class="ajp-auth-divider"></div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -91,8 +104,9 @@ def render_auth(conn):
     kiri, tengah, kanan = st.columns([1, 2, 1])
     with tengah:
         _judul_aplikasi()
-        tab_masuk, tab_daftar = st.tabs(["Masuk", "Daftar"])
-        with tab_masuk:
-            render_login(conn)
-        with tab_daftar:
-            render_register(conn)
+        with st.container(border=True):
+            tab_masuk, tab_daftar = st.tabs(["Masuk", "Daftar"])
+            with tab_masuk:
+                render_login(conn)
+            with tab_daftar:
+                render_register(conn)
