@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.db
+.pytest_cache/
+
+# Orchestration & tooling state (bukan bagian aplikasi)
+.omo/
+.playwright-mcp/
+*.log
+*.pid
