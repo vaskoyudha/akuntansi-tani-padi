@@ -1051,76 +1051,433 @@ para(doc, "Bagian ini menjelaskan langkah penggunaan aplikasi disertai tangkapan
 
 shot_sections = [
     ("2.6.1  Halaman Login",
-     "Saat pertama kali dibuka, aplikasi menampilkan halaman login. Pengguna memasukkan "
-     "username dan kata sandi, lalu menekan tombol Login untuk masuk ke aplikasi.",
-     "01-login.png", "Halaman login aplikasi."),
+     "Halaman pertama yang muncul saat aplikasi dibuka adalah halaman Login. Di tengah "
+     "layar terdapat form berjudul \u201cMasuk\u201d yang berisi dua kolom isian, yaitu "
+     "Username dan Password (kata sandi yang diketik otomatis disamarkan menjadi titik-"
+     "titik agar tidak terbaca orang lain). Tepat di bawahnya ada tombol \u201cMasuk\u201d, "
+     "serta sebuah tab \u201cDaftar\u201d bagi pengguna yang belum memiliki akun. Ketika "
+     "tombol Masuk ditekan, aplikasi mencocokkan data yang diketik dengan data akun yang "
+     "tersimpan di basis data; bila cocok, pengguna langsung dibawa masuk ke aplikasi dan "
+     "namanya disimpan untuk ditampilkan di dalam aplikasi, sedangkan bila tidak cocok "
+     "akan muncul pesan \u201cUsername atau password salah.\u201d Yang penting dipahami, "
+     "kata sandi tidak pernah disimpan dalam bentuk teks biasa: sandi yang diketik diubah "
+     "dahulu menjadi kode acak (di-hash dengan metode PBKDF2-HMAC-SHA256, 200.000 putaran "
+     "dan garam acak unik per pengguna), lalu kode itulah yang dibandingkan dengan kode "
+     "yang tersimpan, sehingga sandi asli tetap aman dan tidak pernah dibaca secara polos.",
+     "01-login.png", "Halaman login aplikasi.",
+     ["Form \u201cMasuk\u201d berisi dua kolom: Username dan Password (sandi tampil sebagai "
+      "titik-titik agar terlindung dari mata orang lain).",
+      "Tombol \u201cMasuk\u201d memeriksa kecocokan akun ke basis data; bila benar pengguna "
+      "langsung masuk, bila salah muncul pesan \u201cUsername atau password salah.\u201d",
+      "Tersedia tab \u201cDaftar\u201d untuk berpindah ke halaman pendaftaran bagi yang "
+      "belum punya akun.",
+      "Untuk mencoba aplikasi, sudah disediakan akun demo dengan username admin dan sandi "
+      "admin123.",
+      "Sandi yang diketik tidak dibandingkan apa adanya, melainkan diubah menjadi kode "
+      "acak terlebih dahulu lalu dicocokkan dengan kode tersimpan (verifikasi aman).",
+      "Sesi login disimpan di memori sementara; bila halaman di-refresh, sesi dianggap "
+      "baru dan pengguna kembali ke halaman login."]),
     ("2.6.2  Halaman Pendaftaran",
-     "Pengguna baru dapat membuat akun melalui halaman pendaftaran dengan mengisi nama, "
-     "username, dan kata sandi.",
-     "02-register.png", "Halaman pendaftaran pengguna baru."),
+     "Pengguna yang belum memiliki akun dapat membuatnya melalui tab \u201cDaftar\u201d. "
+     "Pada halaman ini ditampilkan sebuah form pendaftaran yang berisi kolom Username, "
+     "kolom Password yang dilengkapi tulisan bantuan \u201cMinimal 6 karakter.\u201d, "
+     "kolom Nama lengkap, dan sebuah tombol \u201cDaftar\u201d di bagian bawah. Setelah "
+     "semua kolom diisi dan tombol Daftar ditekan, aplikasi akan memeriksa apakah data "
+     "sudah memenuhi syarat. Bila pendaftaran berhasil, muncul pesan sukses yang meminta "
+     "pengguna kembali login menggunakan akun barunya; sebaliknya bila gagal, misalnya "
+     "username sudah dipakai orang lain atau sandi kurang dari enam karakter, aplikasi "
+     "menampilkan pesan kesalahan yang menjelaskan masalahnya. Di balik layar, akun baru "
+     "disimpan ke basis data lengkap dengan sandi yang sudah diamankan menjadi kode acak "
+     "beserta garam acak unik, sehingga walaupun seseorang membuka isi basis data, sandi "
+     "asli tetap tidak bisa terbaca.",
+     "02-register.png", "Halaman pendaftaran pengguna baru.",
+     ["Form pendaftaran berisi tiga kolom isian: Username, Password (dengan petunjuk "
+      "\u201cMinimal 6 karakter.\u201d), dan Nama lengkap.",
+      "Tombol \u201cDaftar\u201d menyimpan akun baru setelah memastikan data memenuhi "
+      "syarat.",
+      "Bila berhasil, muncul pesan sukses yang mengarahkan pengguna untuk login dengan "
+      "akun barunya.",
+      "Bila gagal, misalnya username sudah terpakai atau sandi kurang dari enam karakter, "
+      "muncul pesan kesalahan yang menjelaskan penyebabnya.",
+      "Sandi disimpan dalam bentuk kode acak (hash) berbumbu garam unik per pengguna, "
+      "bukan teks biasa, sehingga isi basis data tetap aman.",
+      "Setelah akun jadi, pengguna kembali ke tab \u201cMasuk\u201d untuk login seperti "
+      "biasa."]),
     ("2.6.3  Dasbor Ringkasan",
-     "Setelah berhasil login, pengguna disambut oleh dasbor yang menampilkan ringkasan "
-     "keuangan, meliputi total pendapatan, total beban, laba bersih, dan saldo kas.",
-     "03-dashboard.png", "Dasbor ringkasan keuangan."),
+     "Begitu berhasil login, pengguna disambut halaman Dashboard yang diawali banner "
+     "\u201c\U0001F33E Dashboard\u201d dan sapaan \u201cSelamat datang kembali, {nama}.\u201d "
+     "sesuai nama pengguna. Pada baris pertama tampil empat kartu metrik, yaitu "
+     "\u201cTotal Pendapatan\u201d (\U0001F33E), \u201cTotal Beban\u201d (\U0001F4B8), "
+     "\u201cLaba Bersih\u201d (\U0001F4C8), dan \u201cModal Akhir\u201d (\U0001F4B0). Pada "
+     "baris kedua tampil dua kartu tambahan, yaitu \u201cKas Akhir\u201d (\U0001F3E6) dan "
+     "\u201cJumlah Transaksi\u201d (\U0001F4CB) yang menyebutkan banyaknya transaksi, "
+     "misalnya \u201c21 transaksi\u201d. Seluruh angka pada kartu-kartu ini bukan diketik "
+     "manual, melainkan dihitung otomatis dari jurnal yang sudah disesuaikan: nilai "
+     "diambil dari hasil perhitungan laba rugi, laporan perubahan ekuitas, dan laporan "
+     "arus kas, lalu dirangkum ke dalam kartu agar pengguna langsung melihat kondisi "
+     "keuangan terkini dalam sekejap tanpa perlu membuka satu per satu laporannya.",
+     "03-dashboard.png", "Dasbor ringkasan keuangan.",
+     ["Baris pertama memuat empat kartu metrik: \u201cTotal Pendapatan\u201d, \u201cTotal "
+      "Beban\u201d, \u201cLaba Bersih\u201d, dan \u201cModal Akhir\u201d.",
+      "Baris kedua memuat dua kartu: \u201cKas Akhir\u201d dan \u201cJumlah Transaksi\u201d "
+      "(yang menyebutkan jumlah transaksi tercatat).",
+      "Banner \u201c\U0001F33E Dashboard\u201d dan sapaan personal menampilkan nama "
+      "pengguna yang sedang login.",
+      "Semua angka dihitung otomatis dari jurnal yang telah disesuaikan, bukan diketik "
+      "secara manual.",
+      "Nilai kartu bersumber dari perhitungan laba rugi, perubahan ekuitas, dan arus kas "
+      "sehingga selalu konsisten dengan laporan rincinya.",
+      "Dasbor berfungsi sebagai ringkasan cepat agar kondisi keuangan langsung terbaca "
+      "tanpa membuka setiap laporan satu per satu."]),
     ("2.6.4  Jurnal Umum",
-     "Menu Jurnal Umum menampilkan seluruh transaksi yang telah dicatat beserta akun "
-     "debit dan kreditnya secara berurutan.",
-     "04-jurnal-umum.png", "Tampilan Jurnal Umum."),
+     "Halaman Jurnal Umum diberi judul \u201cJurnal Umum\u201d (\U0001F4D2) dengan "
+     "subjudul \u201cPencatatan kronologis seluruh transaksi sebelum penyesuaian "
+     "(21 transaksi).\u201d Halaman ini menampilkan sebuah tabel besar dengan kolom "
+     "Tanggal, Kode, Keterangan, Akun, Debit, dan Kredit, di mana setiap transaksi "
+     "ditulis dalam baris terpisah untuk sisi debit dan sisi kreditnya. Di bagian bawah "
+     "tabel terdapat baris Total Debit dan Total Kredit, dilengkapi badge (penanda) yang "
+     "menunjukkan apakah kedua total sudah seimbang. Data yang ditampilkan adalah 21 "
+     "transaksi mentah, yaitu gabungan data contoh bawaan (seed) dan transaksi yang "
+     "diinput sendiri oleh pengguna, dan semuanya masih dalam kondisi belum disesuaikan. "
+     "Dengan begitu, halaman ini menjadi catatan kronologis paling awal yang merekam apa "
+     "adanya seluruh transaksi sesuai urutan terjadinya.",
+     "04-jurnal-umum.png", "Tampilan Jurnal Umum.",
+     ["Tabel memiliki enam kolom: Tanggal, Kode, Keterangan, Akun, Debit, dan Kredit.",
+      "Setiap transaksi ditulis dalam baris terpisah untuk sisi debit (sisi penambahan) "
+      "dan sisi kredit (sisi pengurangan/lawannya).",
+      "Baris Total Debit dan Total Kredit di bawah tabel memastikan pencatatan berpasangan "
+      "selalu seimbang.",
+      "Badge keseimbangan menandai secara cepat apakah total debit sudah sama dengan "
+      "total kredit.",
+      "Isi tabel adalah 21 transaksi mentah (data contoh bawaan ditambah input pengguna) "
+      "yang belum disesuaikan.",
+      "Subjudul menyebutkan jumlah transaksi yang sedang ditampilkan sehingga mudah "
+      "diketahui sekilas."]),
     ("2.6.5  Buku Besar",
-     "Buku Besar mengelompokkan transaksi berdasarkan masing-masing akun sehingga "
-     "saldo setiap akun dapat dilihat dengan jelas.",
-     "05-buku-besar.png", "Tampilan Buku Besar."),
+     "Halaman Buku Besar berjudul \u201cBuku Besar\u201d (\U0001F4DA) dengan subjudul "
+     "\u201cPengelompokan mutasi per akun beserta saldo berjalan.\u201d Berbeda dari "
+     "jurnal umum yang berurut menurut waktu, halaman ini menyusun ulang transaksi "
+     "berdasarkan akunnya. Setiap akun ditampilkan sebagai panel yang bisa dibuka-tutup "
+     "(expander) dengan judul \u201c{kode} \u2014 {nama}\u201d, dan ketika dibuka akan "
+     "menampilkan tabel berisi kolom Tanggal, Keterangan, Debit, Kredit, dan Saldo "
+     "Berjalan, lalu ditutup baris Total Debit, Total Kredit, dan Saldo Akhir. Kolom "
+     "Saldo Berjalan inilah inti halaman ini: nilainya merupakan akumulasi berjalan yang "
+     "dihitung dari debit dikurangi kredit secara bertahap dari atas ke bawah, sehingga "
+     "pengguna bisa melihat naik-turunnya saldo sebuah akun dari satu transaksi ke "
+     "transaksi berikutnya. Dengan model panel yang bisa dilipat, daftar akun yang banyak "
+     "tetap ringkas dan pengguna dapat fokus membuka hanya akun yang ingin ditelusuri.",
+     "05-buku-besar.png", "Tampilan Buku Besar.",
+     ["Setiap akun tampil sebagai panel lipat (expander) berjudul \u201c{kode} \u2014 "
+      "{nama}\u201d yang bisa dibuka dan ditutup.",
+      "Di dalam panel terdapat tabel dengan kolom Tanggal, Keterangan, Debit, Kredit, dan "
+      "Saldo Berjalan.",
+      "Saldo Berjalan adalah saldo yang terus diperbarui transaksi demi transaksi, "
+      "dihitung dari debit dikurangi kredit secara berurutan.",
+      "Bagian bawah panel menampilkan Total Debit, Total Kredit, dan Saldo Akhir per "
+      "akun.",
+      "Transaksi yang sebelumnya berurut waktu kini dikelompokkan rapi per akun agar "
+      "mudah ditelusuri.",
+      "Model panel lipat membuat daftar akun yang banyak tetap ringkas dan tidak memenuhi "
+      "layar."]),
     ("2.6.6  Neraca Saldo",
-     "Neraca Saldo menampilkan saldo akhir seluruh akun dalam dua kolom (debit dan "
-     "kredit) yang totalnya harus seimbang.",
-     "06-neraca-saldo.png", "Tampilan Neraca Saldo."),
+     "Halaman Neraca Saldo berjudul \u201cNeraca Saldo\u201d (\u2696\uFE0F) dengan "
+     "subjudul \u201cRingkasan saldo seluruh akun; total debit harus sama dengan total "
+     "kredit.\u201d Halaman ini menyajikan satu tabel rangkuman dengan kolom Kode, Akun, "
+     "Debit, dan Kredit, lalu ditutup dengan baris TOTAL di bagian bawah beserta badge "
+     "(penanda) yang menunjukkan apakah kedua kolom sudah seimbang. Untuk menjaga "
+     "tampilan tetap bersih dan mudah dibaca, akun yang saldonya nol otomatis "
+     "disembunyikan sehingga hanya akun yang benar-benar bersaldo yang muncul. Angka pada "
+     "tabel ini adalah saldo akhir tiap akun yang dirangkum dari seluruh transaksi, dan "
+     "karena pencatatan dilakukan berpasangan, total debit dan total kredit selalu sama. "
+     "Halaman ini berguna sebagai titik "
+     "pemeriksaan untuk memastikan seluruh pembukuan masih dalam keadaan seimbang sebelum "
+     "lanjut ke tahap penyesuaian.",
+     "06-neraca-saldo.png", "Tampilan Neraca Saldo.",
+     ["Tabel memiliki kolom Kode, Akun, Debit, dan Kredit yang merangkum saldo akhir tiap "
+      "akun.",
+      "Baris TOTAL di bawah tabel menjumlahkan seluruh debit dan seluruh kredit.",
+      "Badge keseimbangan menegaskan total debit selalu sama dengan total kredit.",
+      "Akun yang bersaldo nol disembunyikan otomatis agar tabel tetap ringkas dan mudah "
+      "dibaca.",
+      "Angka berasal dari rangkuman seluruh transaksi yang sudah dicatat sebelum "
+      "penyesuaian.",
+      "Halaman ini menjadi titik kontrol untuk memastikan pembukuan seimbang sebelum "
+      "masuk tahap penyesuaian."]),
     ("2.6.7  Jurnal Penyesuaian",
-     "Jurnal Penyesuaian memuat penyesuaian akhir periode, misalnya penyusutan "
-     "peralatan dan pemakaian perlengkapan.",
-     "07-jurnal-penyesuaian.png", "Tampilan Jurnal Penyesuaian."),
+     "Halaman Jurnal Penyesuaian berjudul \u201cJurnal Penyesuaian\u201d (\U0001F527) "
+     "dengan subjudul \u201cPenyesuaian akhir periode agar saldo akun mencerminkan "
+     "kondisi riil.\u201d Pada data contoh, halaman ini menampilkan satu entri "
+     "penyesuaian bernama AJP1 tertanggal 30 April 2025, yaitu mencatat Debit pada akun "
+     "Beban Perlengkapan sebesar Rp 100.000 dan Kredit pada akun Perlengkapan sebesar "
+     "Rp 100.000. Di dekat tabel terdapat kotak catatan yang menjelaskan latar belakang "
+     "penyesuaian tersebut, yakni perlengkapan berupa karung gabah senilai Rp 100.000 "
+     "yang telah habis terpakai saat panen sehingga perlu dikurangi dari nilai aset dan "
+     "diakui sebagai beban. Penyesuaian seperti ini diperlukan agar saldo akun benar-"
+     "benar menggambarkan kondisi nyata di akhir periode, bukan sekadar angka pembelian "
+     "di awal. Dengan begitu, laporan yang disusun setelah tahap ini menjadi lebih jujur "
+     "dan akurat.",
+     "07-jurnal-penyesuaian.png", "Tampilan Jurnal Penyesuaian.",
+     ["Menampilkan entri penyesuaian AJP1 tertanggal 30 April 2025 dalam format tabel "
+      "debit dan kredit.",
+      "Isinya mencatat Debit Beban Perlengkapan Rp 100.000 dan Kredit Perlengkapan "
+      "Rp 100.000.",
+      "Tersedia kotak catatan yang menerangkan alasan penyesuaian dengan bahasa yang "
+      "mudah dipahami.",
+      "Latar belakangnya: perlengkapan karung gabah senilai Rp 100.000 telah habis "
+      "terpakai saat panen.",
+      "Penyesuaian membuat nilai aset berkurang dan memunculkan beban agar sesuai kondisi "
+      "riil akhir periode.",
+      "Hasil penyesuaian inilah yang akan dipakai oleh laporan-laporan berikutnya agar "
+      "lebih akurat."]),
     ("2.6.8  Neraca Saldo Setelah Penyesuaian",
-     "Laporan ini menampilkan saldo akun setelah jurnal penyesuaian diterapkan.",
-     "08-ns-penyesuaian.png", "Tampilan Neraca Saldo Setelah Penyesuaian."),
+     "Halaman ini berjudul \u201cNeraca Saldo Setelah Penyesuaian\u201d (\u2696\uFE0F) "
+     "dengan subjudul \u201cSaldo seluruh akun setelah jurnal penyesuaian diposting.\u201d "
+     "Tampilannya mirip dengan Neraca Saldo biasa, yaitu berupa tabel saldo seluruh akun "
+     "yang dilengkapi badge (penanda) keseimbangan, namun bedanya angka di sini sudah "
+     "memperhitungkan jurnal penyesuaian yang dibuat sebelumnya. Artinya, jika di Jurnal "
+     "Penyesuaian tadi tercatat pemakaian perlengkapan Rp 100.000, maka saldo akun "
+     "Perlengkapan dan Beban Perlengkapan pada halaman ini sudah ikut berubah mengikuti "
+     "penyesuaian tersebut. Angka pada tabel dihitung dari jurnal yang sudah disesuaikan, "
+     "sehingga inilah dasar saldo yang lebih akurat untuk menyusun laporan keuangan "
+     "utama seperti laba rugi, perubahan ekuitas, dan posisi keuangan. Halaman ini sekali "
+     "lagi memastikan total debit tetap sama dengan total kredit setelah penyesuaian.",
+     "08-ns-penyesuaian.png", "Tampilan Neraca Saldo Setelah Penyesuaian.",
+     ["Menampilkan tabel saldo seluruh akun, serupa Neraca Saldo, namun angkanya sudah "
+      "memperhitungkan penyesuaian.",
+      "Saldo akun yang terdampak penyesuaian (misalnya Perlengkapan dan Beban "
+      "Perlengkapan) sudah berubah mengikuti AJP1.",
+      "Badge keseimbangan menegaskan total debit tetap sama dengan total kredit setelah "
+      "penyesuaian.",
+      "Angka dihitung otomatis dari jurnal yang sudah disesuaikan, bukan dari jurnal "
+      "mentah.",
+      "Saldo di halaman ini menjadi dasar penyusunan laba rugi, perubahan ekuitas, dan "
+      "posisi keuangan.",
+      "Halaman ini memastikan pembukuan tetap seimbang sebelum laporan keuangan utama "
+      "disusun."]),
     ("2.6.9  Laporan Laba Rugi",
-     "Laporan Laba Rugi menyajikan total pendapatan, rincian beban, dan laba bersih "
-     "usaha tani pada periode berjalan.",
-     "09-laba-rugi.png", "Tampilan Laporan Laba Rugi."),
+     "Halaman Laporan Laba Rugi berjudul \u201cLaporan Laba Rugi\u201d (\U0001F4C8) dan "
+     "disusun menjadi dua seksi tabel utama. Seksi \u201cPendapatan\u201d memuat rincian "
+     "sumber pemasukan beserta baris TOTAL pendapatannya, sedangkan seksi \u201cBeban\u201d "
+     "memuat rincian seluruh biaya beserta baris TOTAL bebannya, masing-masing dengan "
+     "kolom Akun dan Jumlah. Di bagian akhir terdapat kartu \u201cLaba Bersih\u201d yang "
+     "berwarna hijau bila hasilnya untung (nol atau lebih) dan merah bila merugi, "
+     "dilengkapi sub-baris yang memperlihatkan perhitungan \u201cPendapatan ... dikurangi "
+     "Beban ...\u201d. Cara kerjanya sederhana: aplikasi menjumlahkan seluruh pendapatan, "
+     "menjumlahkan seluruh beban, lalu mengurangkan keduanya, semuanya diambil dari "
+     "jurnal yang sudah disesuaikan. Dengan penyajian dua seksi yang jelas plus kartu "
+     "berwarna, pengguna langsung tahu apakah usaha taninya untung atau rugi pada periode "
+     "tersebut.",
+     "09-laba-rugi.png", "Tampilan Laporan Laba Rugi.",
+     ["Seksi \u201cPendapatan\u201d menampilkan rincian pemasukan beserta baris TOTAL "
+      "pendapatan.",
+      "Seksi \u201cBeban\u201d menampilkan rincian biaya beserta baris TOTAL beban, "
+      "dengan kolom Akun dan Jumlah.",
+      "Kartu \u201cLaba Bersih\u201d berwarna hijau saat untung dan merah saat rugi "
+      "sehingga mudah dikenali.",
+      "Sub-baris di kartu memperlihatkan perhitungan Pendapatan dikurangi Beban secara "
+      "ringkas.",
+      "Angka dihitung otomatis dengan mengurangkan total beban dari total pendapatan pada "
+      "jurnal yang sudah disesuaikan.",
+      "Laporan ini menjawab pertanyaan utama pelaku usaha: untung atau rugi pada periode "
+      "berjalan."]),
     ("2.6.10  Laporan Perubahan Ekuitas",
-     "Laporan ini menunjukkan perubahan modal pemilik dari modal awal hingga modal "
-     "akhir setelah memperhitungkan laba dan prive.",
-     "10-ekuitas.png", "Tampilan Laporan Perubahan Ekuitas."),
+     "Halaman Laporan Perubahan Ekuitas berjudul \u201cLaporan Perubahan Ekuitas\u201d "
+     "(\U0001F4B9) dengan subjudul \u201cPeriode panen 2025 \u2014 disusun dari jurnal "
+     "yang telah disesuaikan.\u201d Halaman ini menampilkan tabel berkolom Keterangan dan "
+     "Jumlah yang menelusuri perjalanan modal pemilik, mulai dari Modal Awal, lalu "
+     "ditambah Laba Bersih, dikurangi Prive (pengambilan pribadi pemilik untuk keperluan "
+     "di luar usaha), hingga akhirnya diperoleh Modal Akhir. Di bagian bawah disediakan "
+     "kartu \u201cModal Akhir\u201d yang menonjolkan angka penutup tersebut. Perhitungan "
+     "mengikuti rumus modal akhir = modal awal + laba bersih \u2212 prive, dengan nilai "
+     "laba bersih diambil dari Laporan Laba Rugi dan seluruh angka bersumber dari jurnal "
+     "yang telah disesuaikan. Dengan begitu, pengguna dapat melihat dengan jelas seberapa "
+     "besar modalnya bertambah atau berkurang selama satu periode usaha tani.",
+     "10-ekuitas.png", "Tampilan Laporan Perubahan Ekuitas.",
+     ["Tabel berkolom Keterangan dan Jumlah menampilkan urutan Modal Awal, Laba Bersih "
+      "(menambah), Prive (mengurangi), dan Modal Akhir.",
+      "Prive adalah pengambilan dana pribadi oleh pemilik untuk keperluan di luar usaha, "
+      "sehingga mengurangi modal.",
+      "Tersedia kartu \u201cModal Akhir\u201d yang menonjolkan nilai modal di akhir "
+      "periode.",
+      "Perhitungan memakai rumus modal akhir = modal awal + laba bersih \u2212 prive.",
+      "Nilai laba bersih diambil dari Laporan Laba Rugi dan seluruh angka bersumber dari "
+      "jurnal yang telah disesuaikan.",
+      "Laporan ini memperlihatkan secara jelas pertumbuhan atau penyusutan modal pemilik "
+      "sepanjang periode."]),
     ("2.6.11  Laporan Posisi Keuangan (Neraca)",
-     "Laporan Posisi Keuangan menampilkan aset, serta ekuitas pada akhir periode, di "
-     "mana total aset sama dengan total ekuitas.",
-     "11-posisi-keuangan.png", "Tampilan Laporan Posisi Keuangan."),
+     "Halaman Laporan Posisi Keuangan berjudul \u201cLaporan Posisi Keuangan "
+     "(Neraca)\u201d (\U0001F3DB\uFE0F) dengan subjudul \u201cPer 30 April 2025 \u2014 "
+     "Aset harus sama dengan Kewajiban + Ekuitas.\u201d Halaman ini ditata dalam dua "
+     "kolom berdampingan: kolom kiri berjudul \u201cAset\u201d memuat rincian harta usaha "
+     "beserta baris TOTAL ASET, sedangkan kolom kanan berjudul \u201cKewajiban & "
+     "Ekuitas\u201d memuat rincian utang dan modal, termasuk Modal Akhir, beserta baris "
+     "TOTAL-nya. Di antara kedua kolom terdapat badge (penanda) keseimbangan yang "
+     "membandingkan total aset dengan total kewajiban ditambah ekuitas. Inti laporan ini "
+     "adalah persamaan dasar akuntansi: apa yang dimiliki usaha (aset) harus sama dengan "
+     "sumber pendanaannya (kewajiban ditambah ekuitas). Nilai Modal Akhir yang muncul di "
+     "sini diambil dari Laporan Perubahan Ekuitas, sehingga seluruh laporan saling "
+     "terhubung dan konsisten satu sama lain.",
+     "11-posisi-keuangan.png", "Tampilan Laporan Posisi Keuangan.",
+     ["Kolom kiri \u201cAset\u201d memuat rincian harta usaha beserta baris TOTAL ASET.",
+      "Kolom kanan \u201cKewajiban & Ekuitas\u201d memuat rincian utang dan modal, "
+      "termasuk Modal Akhir, beserta baris TOTAL.",
+      "Badge keseimbangan membandingkan TOTAL ASET dengan total Kewajiban ditambah "
+      "Ekuitas.",
+      "Laporan menegaskan persamaan dasar akuntansi: Aset = Kewajiban + Ekuitas.",
+      "Nilai Modal Akhir diambil dari Laporan Perubahan Ekuitas sehingga antarlaporan "
+      "tetap konsisten.",
+      "Subjudul menyebutkan tanggal pelaporan (per 30 April 2025) sebagai potret kondisi "
+      "keuangan pada saat itu."]),
     ("2.6.12  Laporan Arus Kas",
-     "Laporan Arus Kas merangkum aliran kas masuk dan keluar sehingga saldo kas akhir "
-     "dapat diketahui.",
-     "12-arus-kas.png", "Tampilan Laporan Arus Kas."),
+     "Halaman Laporan Arus Kas berjudul \u201cLaporan Arus Kas\u201d (\U0001F4B5) dengan "
+     "subjudul \u201cMetode langsung\u201d (cara penyusunan yang merinci penerimaan dan "
+     "pengeluaran kas secara langsung). Halaman ini terbagi menjadi tiga seksi, yaitu "
+     "Aktivitas Operasi (kas dari kegiatan usaha sehari-hari), Pendanaan (kas dari modal "
+     "atau pinjaman), dan Investasi (kas untuk membeli atau menjual aset), di mana tiap "
+     "seksi menampilkan rincian beserta totalnya. Di bagian bawah terdapat tabel "
+     "ringkasan berisi Kenaikan (Penurunan) Kas Bersih, Kas Awal Periode (bernilai 0), "
+     "dan Kas Akhir Periode, dilengkapi kartu \u201cKas Akhir Periode\u201d yang "
+     "menonjolkan saldo kas penutup. Cara kerjanya: setiap transaksi yang menyentuh akun "
+     "Kas ditelaah akun lawannya, lalu dikelompokkan ke salah satu dari tiga aktivitas "
+     "tersebut, sehingga pengguna bisa melihat dari mana kas masuk dan ke mana kas keluar "
+     "selama periode berjalan.",
+     "12-arus-kas.png", "Tampilan Laporan Arus Kas.",
+     ["Disusun dengan metode langsung, yaitu merinci penerimaan dan pengeluaran kas apa "
+      "adanya.",
+      "Terdapat tiga seksi: Aktivitas Operasi, Pendanaan, dan Investasi, masing-masing "
+      "dengan rincian dan total.",
+      "Tabel ringkasan memuat Kenaikan (Penurunan) Kas Bersih, Kas Awal Periode (0), dan "
+      "Kas Akhir Periode.",
+      "Tersedia kartu \u201cKas Akhir Periode\u201d yang menonjolkan saldo kas di akhir "
+      "periode.",
+      "Setiap transaksi yang menyentuh akun Kas dikelompokkan berdasarkan akun lawannya "
+      "ke salah satu dari tiga aktivitas.",
+      "Laporan ini memperlihatkan dengan jelas sumber masuknya kas dan tujuan keluarnya "
+      "kas sepanjang periode."]),
     ("2.6.13  Jurnal Penutup",
-     "Jurnal Penutup digunakan untuk menutup akun pendapatan dan beban pada akhir "
-     "periode agar saldonya kembali nol.",
-     "13-jurnal-penutup.png", "Tampilan Jurnal Penutup."),
+     "Halaman Jurnal Penutup berjudul \u201cJurnal Penutup\u201d (\U0001F512) dengan "
+     "subjudul \u201cMemindahkan saldo akun nominal ke modal agar bersaldo nol.\u201d "
+     "Yang dimaksud akun nominal adalah akun pendapatan dan beban yang sifatnya sementara "
+     "dan harus dinolkan di akhir periode agar periode berikutnya dimulai dari angka "
+     "bersih. Halaman ini menampilkan tabel berisi empat entri penutupan, yaitu JP1 "
+     "sampai JP4, yang angkanya dihitung otomatis oleh aplikasi. Di sampingnya disajikan "
+     "daftar \u201cEmpat langkah penutupan\u201d sebagai panduan: JP1 menutup akun "
+     "pendapatan ke Ikhtisar Laba Rugi, JP2 menutup akun beban ke Ikhtisar, JP3 "
+     "memindahkan saldo Ikhtisar ke Modal, dan JP4 memindahkan Prive ke Modal. Pada "
+     "narasi panduan disebutkan contoh angka laba Rp 11.500.000 dan prive Rp 4.500.000 "
+     "sebagai ilustrasi agar mudah dibayangkan; angka ilustrasi ini sengaja ditulis tetap "
+     "pada teks penjelasan, sedangkan yang benar-benar dihitung otomatis oleh aplikasi "
+     "adalah tabel entri JP1 sampai JP4 tersebut.",
+     "13-jurnal-penutup.png", "Tampilan Jurnal Penutup.",
+     ["Tabel menampilkan empat entri penutupan JP1 sampai JP4 yang nilainya dihitung "
+      "otomatis.",
+      "Akun nominal (pendapatan dan beban) bersifat sementara dan dinolkan agar periode "
+      "baru mulai dari angka bersih.",
+      "Daftar \u201cEmpat langkah penutupan\u201d menjelaskan urutannya: JP1 tutup "
+      "pendapatan ke Ikhtisar, JP2 tutup beban ke Ikhtisar.",
+      "Lanjutannya: JP3 memindahkan saldo Ikhtisar ke Modal, dan JP4 memindahkan Prive "
+      "ke Modal.",
+      "Contoh angka laba Rp 11.500.000 dan prive Rp 4.500.000 hanya ilustrasi tetap pada "
+      "narasi, bukan hasil hitung di halaman ini.",
+      "Yang dihitung otomatis oleh aplikasi adalah tabel entri JP1 sampai JP4, bukan "
+      "angka contoh pada narasi."]),
     ("2.6.14  Neraca Saldo Setelah Penutupan",
-     "Laporan ini menampilkan saldo akun setelah proses penutupan, yang umumnya hanya "
-     "menyisakan akun aset dan ekuitas.",
-     "14-ns-penutupan.png", "Tampilan Neraca Saldo Setelah Penutupan."),
+     "Halaman ini berjudul \u201cNeraca Saldo Setelah Penutupan\u201d (\u2696\uFE0F) "
+     "dengan subjudul \u201cHanya akun riil yang tersisa; akun nominal sudah bersaldo "
+     "nol.\u201d Setelah jurnal penutup dijalankan, akun-akun pendapatan dan beban sudah "
+     "dinolkan, sehingga tabel pada halaman ini hanya menyaring dan menampilkan akun riil "
+     "saja, yaitu akun aset, kewajiban, dan ekuitas, lengkap dengan badge (penanda) "
+     "keseimbangan. Keterangan di bawahnya menjelaskan bahwa akun Pendapatan dan Beban "
+     "kini bersaldo nol karena sudah dipindahkan ke modal melalui proses penutupan. "
+     "Halaman ini menjadi bukti akhir bahwa siklus akuntansi satu periode telah tuntas "
+     "dengan rapi: yang tersisa hanyalah akun-akun yang saldonya akan dibawa ke periode "
+     "berikutnya, dan total debit tetap sama dengan total kredit. Dengan demikian, "
+     "pembukuan siap memulai periode baru dari titik yang bersih.",
+     "14-ns-penutupan.png", "Tampilan Neraca Saldo Setelah Penutupan.",
+     ["Tabel hanya menampilkan akun riil, yaitu akun aset, kewajiban, dan ekuitas.",
+      "Akun nominal (Pendapatan dan Beban) sudah bersaldo nol karena dipindahkan ke modal "
+      "lewat jurnal penutup.",
+      "Badge keseimbangan menegaskan total debit tetap sama dengan total kredit setelah "
+      "penutupan.",
+      "Keterangan di bawah tabel menjelaskan alasan akun Pendapatan dan Beban kini "
+      "bernilai nol.",
+      "Saldo yang tersisa adalah saldo yang akan dibawa sebagai modal awal periode "
+      "berikutnya.",
+      "Halaman ini menandai bahwa satu siklus akuntansi telah selesai dengan rapi dan "
+      "seimbang."]),
     ("2.6.15  Input Transaksi",
-     "Menu Input Transaksi menyediakan formulir untuk mencatat transaksi baru. Pengguna "
-     "mengisi tanggal, keterangan, serta akun debit dan kredit. Aplikasi akan menolak "
-     "penyimpanan bila total debit dan kredit tidak seimbang.",
-     "15-input-transaksi.png", "Halaman input transaksi baru."),
+     "Halaman Input Transaksi berjudul \u201c\u270F\uFE0F Input Transaksi\u201d dan diberi "
+     "keterangan yang mengingatkan bahwa total debit harus sama dengan total kredit. "
+     "Inilah satu-satunya halaman yang dapat menulis dan mengubah data. Di bagian atas "
+     "terdapat form input yang otomatis kosong kembali setiap selesai menyimpan, berisi "
+     "kolom Tanggal, kolom Keterangan (dengan contoh tulisan \u201cContoh: Pembelian "
+     "benih padi\u201d), baris Debit (pilihan Akun Debit dari 15 akun resmi ditambah "
+     "Nominal Debit yang naik turun per kelipatan 1000), baris Kredit (Akun Kredit "
+     "ditambah Nominal Kredit), serta tombol \u201cSimpan Transaksi\u201d. Bila debit dan "
+     "kredit tidak sama, penyimpanan ditolak disertai pesan kesalahan; bila sudah "
+     "seimbang, muncul pesan \u201cTransaksi berhasil disimpan.\u201d dan aplikasi "
+     "memberi kode transaksi otomatis berformat T diikuti angka. Di bawah form terdapat "
+     "\u201c\U0001F4CB Daftar Transaksi\u201d berupa tabel Tanggal, Kode, Keterangan, "
+     "Akun, Debit, dan Kredit, lalu \u201c\U0001F5C2\uFE0F Kelola Transaksi\u201d di mana "
+     "setiap transaksi memiliki tombol \u201c\u270F\uFE0F Edit\u201d dan "
+     "\u201c\U0001F5D1\uFE0F Hapus\u201d (semua transaksi, termasuk data contoh, bisa "
+     "diedit atau dihapus). Tersedia pula panel \u201c\u26A0\uFE0F Reset ke Data Awal\u201d "
+     "yang memuat peringatan, kotak centang konfirmasi, dan tombol \u201cReset "
+     "Sekarang\u201d untuk mengembalikan 20 transaksi contoh.",
+     "15-input-transaksi.png", "Halaman input transaksi baru.",
+     ["Form input berisi kolom Tanggal, Keterangan (dengan contoh \u201cPembelian benih "
+      "padi\u201d), baris Debit, dan baris Kredit.",
+      "Akun Debit dan Akun Kredit dipilih dari 15 akun resmi, dan nominalnya naik turun "
+      "per kelipatan 1000.",
+      "Tombol \u201cSimpan Transaksi\u201d menolak data bila debit tidak sama dengan "
+      "kredit, dan menerima bila seimbang dengan pesan \u201cTransaksi berhasil "
+      "disimpan.\u201d",
+      "Setiap transaksi tersimpan otomatis diberi kode berformat T diikuti angka, dan "
+      "form langsung kosong kembali setelah menyimpan.",
+      "Bagian \u201c\U0001F4CB Daftar Transaksi\u201d menampilkan tabel seluruh transaksi, "
+      "sedangkan \u201c\U0001F5C2\uFE0F Kelola Transaksi\u201d menyediakan tombol Edit dan "
+      "Hapus untuk tiap transaksi (termasuk data contoh).",
+      "Panel \u201c\u26A0\uFE0F Reset ke Data Awal\u201d (dengan peringatan, centang "
+      "konfirmasi, dan tombol \u201cReset Sekarang\u201d) mengembalikan 20 transaksi "
+      "contoh bila diperlukan."]),
     ("2.6.16  Ubah Transaksi",
-     "Pada daftar transaksi, pengguna dapat menekan tombol ubah untuk membuka formulir "
-     "penyuntingan. Data transaksi akan dimuat ke formulir sehingga dapat diperbarui "
-     "lalu disimpan kembali.",
-     "16-edit-transaksi.png", "Formulir ubah transaksi."),
+     "Ketika tombol \u201c\u270F\uFE0F Edit\u201d pada sebuah transaksi ditekan, aplikasi "
+     "memunculkan popup mengambang (jendela dialog) di tengah layar berjudul "
+     "\u201c\u270F\uFE0F Edit Transaksi {kode}\u201d. Form di dalam popup sudah otomatis "
+     "terisi dengan data lama transaksi tersebut, meliputi Tanggal, Keterangan, Akun dan "
+     "Nominal Debit, serta Akun dan Nominal Kredit, dilengkapi tombol \u201c\U0001F4BE "
+     "Simpan Perubahan\u201d dan tombol \u201cBatal\u201d. Bila pengguna menyimpan dengan "
+     "kondisi debit sama dengan kredit, perubahan tersimpan dan popup otomatis tertutup; "
+     "namun bila debit tidak sama dengan kredit, pesan kesalahan tampil di dalam popup "
+     "dan popup tetap terbuka tanpa mengubah data lama. Menekan \u201cBatal\u201d akan "
+     "menutup popup tanpa perubahan apa pun. Popup ini memanfaatkan fitur dialog "
+     "Streamlit sehingga selalu muncul mengambang di tengah layar terlepas dari posisi "
+     "gulir, sebuah perbaikan dari versi sebelumnya yang formnya kerap muncul jauh dari "
+     "tombol Edit dan menyulitkan pengguna.",
+     "16-edit-transaksi.png", "Formulir ubah transaksi.",
+     ["Tombol \u201c\u270F\uFE0F Edit\u201d memunculkan popup mengambang berjudul "
+      "\u201c\u270F\uFE0F Edit Transaksi {kode}\u201d di tengah layar.",
+      "Form di dalam popup sudah terisi data lama: Tanggal, Keterangan, Akun dan Nominal "
+      "Debit, serta Akun dan Nominal Kredit.",
+      "Tombol \u201c\U0001F4BE Simpan Perubahan\u201d menyimpan saat debit sama dengan "
+      "kredit, lalu popup otomatis tertutup.",
+      "Bila debit tidak sama dengan kredit, pesan kesalahan muncul di dalam popup dan "
+      "popup tetap terbuka tanpa mengubah data lama.",
+      "Tombol \u201cBatal\u201d menutup popup tanpa menyimpan perubahan apa pun.",
+      "Popup memakai fitur dialog Streamlit agar selalu mengambang di tengah layar, "
+      "memperbaiki versi lama yang formnya muncul jauh dari tombol Edit."]),
 ]
 
-for title, desc, img, cap in shot_sections:
+for title, intro, img, cap, bullets in shot_sections:
     h3(doc, title)
-    para(doc, desc)
+    para(doc, intro)
     figure(doc, SHOT / img, cap, width_cm=15.0)
+    para(doc, "Penjelasan:", bold=True, justify=False)
+    for b in bullets:
+        bullet(doc, b)
+    para(doc, "Dengan memahami isi dan cara kerja halaman ini, pengguna dapat membaca "
+              "informasinya dengan percaya diri dan memanfaatkannya untuk mengelola "
+              "keuangan usaha tani padi secara lebih tertib.")
 
 page_break(doc)
 
