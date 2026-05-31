@@ -192,6 +192,38 @@ def hapus_jurnal(conn: sqlite3.Connection, db_id: int) -> None:
     conn.commit()
 
 
+def update_jurnal(
+    conn: sqlite3.Connection,
+    db_id: int,
+    tanggal: str,
+    keterangan: str,
+    lines: list[dict],
+    kode: str | None = None,
+) -> None:
+    """
+    Perbarui satu transaksi yang sudah ada (db_id). Validasi balance dulu
+    (debit==kredit, !=0). Raise ValueError bila tidak balance -> tidak ada
+    yang berubah. Kode & tipe entry tidak diubah; hanya tanggal, keterangan,
+    dan baris-baris jurnal yang diganti.
+    """
+    entry = {"id": kode or "?", "tanggal": tanggal, "keterangan": keterangan, "lines": lines}
+    acc.validasi_entry(entry)  # raise ValueError jika tidak balance -> DB utuh
+
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE jurnal SET tanggal = ?, keterangan = ? WHERE id = ?",
+        (tanggal, keterangan, db_id),
+    )
+    cur.execute("DELETE FROM jurnal_baris WHERE jurnal_id = ?", (db_id,))
+    for ln in lines:
+        cur.execute(
+            "INSERT INTO jurnal_baris (jurnal_id, kode_akun, akun, debit, kredit) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (db_id, ln["kode"], ln["akun"], str(D(ln["debit"])), str(D(ln["kredit"]))),
+        )
+    conn.commit()
+
+
 def reset_jurnal(conn: sqlite3.Connection) -> None:
     """Kosongkan semua jurnal lalu seed ulang (untuk tombol reset di UI)."""
     cur = conn.cursor()
