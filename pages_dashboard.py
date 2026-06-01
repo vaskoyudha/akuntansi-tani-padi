@@ -13,6 +13,7 @@ Entry point: render_dashboard(conn, data=None)
 import streamlit as st
 
 import accounting as acc
+import database as db
 import ui_helpers
 
 
@@ -96,4 +97,33 @@ def render_dashboard(conn, data=None):
     st.caption(
         "Angka dihitung otomatis dari jurnal yang telah disesuaikan "
         "(laba rugi, perubahan ekuitas, dan arus kas)."
+    )
+
+    # --- Ringkasan stok (informasi persediaan, BUKAN akun aset) -----------
+    # Data stok diambil langsung dari koneksi (db.get_stok_ringkasan), TIDAK
+    # lewat get_data(): alur jurnal/laporan keuangan tetap terpisah dari stok.
+    st.divider()
+    ui_helpers.section_header("Ringkasan Stok", "📦")
+
+    ringkasan = db.get_stok_ringkasan(conn)
+    total_nilai = sum((r["nilai"] for r in ringkasan), acc.NOL)
+    menipis = sum(1 for r in ringkasan if r["is_low"])
+
+    s1, s2, s3 = st.columns(3)
+    with s1:
+        ui_helpers.kartu_statistik(
+            "Jenis Item Stok", f"{len(ringkasan)} item", "📦"
+        )
+    with s2:
+        ui_helpers.kartu_statistik(
+            "Item Menipis", f"{menipis} item", "⚠️"
+        )
+    with s3:
+        ui_helpers.kartu_statistik(
+            "Total Nilai Stok", acc.format_rupiah(total_nilai), "💰"
+        )
+
+    st.caption(
+        "Nilai stok bersifat informasi persediaan, bukan akun aset di "
+        "laporan keuangan."
     )
