@@ -1481,6 +1481,106 @@ for title, intro, img, cap, bullets in shot_sections:
 
 page_break(doc)
 
+h1(doc, "2.13  Fitur Stok / Persediaan")
+para(doc, "Selain pencatatan keuangan berbasis jurnal, aplikasi Akuntansi Tani Padi "
+          "juga menyediakan modul Stok / Persediaan yang membantu petani mengetahui "
+          "sisa bahan usaha tani — benih, pupuk, pestisida, dan karung — beserta "
+          "nilai rupiahnya. Fitur ini berdiri sendiri dari siklus akuntansi: stok "
+          "tidak ditulis sebagai akun aset pada laporan keuangan, melainkan "
+          "ditampilkan sebagai informasi persediaan yang dihitung ulang dari "
+          "seluruh pergerakan masuk/keluar dengan metode harga rata-rata "
+          "bergerak (moving average).")
+para(doc, "Tujuan utama modul ini adalah:")
+bullet(doc, "Membantu petani memantau ketersediaan bahan secara real-time sehingga "
+            "kekurangan dapat diantisipasi sebelum masa tanam.")
+bullet(doc, "Menyajikan nilai persediaan dalam rupiah sebagai gambaran modal "
+            "yang tertahan di gudang.")
+bullet(doc, "Menolak transaksi yang tidak logis, seperti pengeluaran melebihi sisa "
+            "stok atau perubahan riwayat yang membuat saldo menjadi negatif.")
+bullet(doc, "Menghubungkan pergerakan stok secara opsional ke jurnal umum melalui "
+            "kolom referensi, tanpa mengganggu alur laporan keuangan.")
+
+h2(doc, "2.13.1  Item Stok & Satuan")
+para(doc, "Aplikasi menyediakan empat jenis item yang umum digunakan dalam "
+          "usaha tani padi, masing-masing dengan satuan dan ambang stok minimum "
+          "yang dapat disesuaikan. Satuan terbagi dua kelompok: nilai desimal "
+          "(kilogram, liter) untuk bahan yang mungkin diukur pecahan, dan nilai "
+          "bulat (lembar) untuk barang yang dihitung per unit.")
+kv_table(doc, [
+    ("Benih", "kg (desimal)"),
+    ("Pupuk", "kg (desimal)"),
+    ("Pestisida", "liter (desimal)"),
+    ("Karung", "lembar (bulat)"),
+], headers=("Item", "Satuan & Format"))
+
+h2(doc, "2.13.2  Halaman Stok / Persediaan")
+para(doc, "Halaman Stok / Persediaan dapat diakses dari sidebar dengan memilih "
+          "menu \"📦 Stok/Persediaan\". Halaman ini menampilkan peringatan stok "
+          "menipis di bagian atas, tabel ringkasan stok saat ini, formulir "
+          "pencatatan pergerakan masuk/keluar, dan riwayat lengkap per item yang "
+          "dapat dibuka sebagai expander. Setiap baris riwayat dilengkapi tombol "
+          "Edit (muncul sebagai jendela dialog) dan Hapus.")
+figure(doc, SHOT / "17-stok-halaman.png",
+       "Tampilan Halaman Stok / Persediaan dengan peringatan stok menipis, "
+       "tabel ringkasan, formulir pergerakan, dan expander riwayat.",
+       width_cm=15.5)
+para(doc, "Penjelasan:", bold=True, justify=False)
+bullet(doc, "Peringatan kuning di atas tabel otomatis muncul bila ada item yang "
+            "sisa kuantitasnya kurang dari atau sama dengan ambang stok minimum.")
+bullet(doc, "Tabel ringkasan menunjukkan sisa, nilai rupiah, dan status setiap "
+            "item; nilai dihitung ulang dari pergerakan, bukan disimpan.")
+bullet(doc, "Formulir \"Catat Pergerakan\" menerima tanggal, tipe (masuk/keluar), "
+            "kuantitas, dan harga satuan. Untuk tipe \"keluar\" aplikasi secara "
+            "otomatis menentukan nilai keluar dari harga rata-rata bergerak "
+            "tanggal tersebut, sehingga kolom harga satuan diabaikan.")
+bullet(doc, "Riwayat per item memperlihatkan setiap pergerakan dengan saldo "
+            "berjalan (qty, nilai) sehingga pengguna dapat menelusuri "
+            "perubahan stok dari waktu ke waktu.")
+bullet(doc, "Edit dilakukan pada jendela popup yang mempertahankan nilai lama "
+            "sebagai nilai awal; Hapus akan menampilkan pesan kesalahan bila "
+            "penghapusan menyebabkan saldo negatif di titik manapun.")
+
+h2(doc, "2.13.3  Kartu Ringkasan Stok di Dashboard")
+para(doc, "Halaman Dashboard turut menampilkan tiga kartu ringkasan stok di "
+          "bawah ringkasan keuangan: jumlah jenis item, jumlah item yang "
+          "menipis, dan total nilai persediaan dalam rupiah. Sesuai prinsip "
+          "pemisahan modul, nilai stok TIDAK ikut serta dalam perhitungan "
+          "laba rugi, posisi keuangan, maupun arus kas — nilai tersebut murni "
+          "informasi persediaan.")
+figure(doc, SHOT / "18-dashboard-stok.png",
+       "Dashboard dengan kartu keuangan (atas) dan kartu ringkasan stok (bawah).",
+       width_cm=15.5)
+para(doc, "Catatan penting:", bold=True, justify=False)
+bullet(doc, "Kartu \"Total Nilai Stok\" dihasilkan langsung dari koneksi "
+            "database (db.get_stok_ringkasan) dan tidak melewati alur "
+            "get_data() yang dipakai laporan keuangan.")
+bullet(doc, "Tujuan pemisahan ini agar penambahan atau pengurangan stok tidak "
+            "mengubah laba/rugi, melainkan hanya ditampilkan sebagai "
+            "informasi modal yang tertahan di gudang.")
+
+h2(doc, "2.13.4  Validasi Stok Negatif")
+para(doc, "Modul stok menerapkan pola validasi-sebelum-tulis: setiap "
+          "penambahan, perubahan, atau penghapusan pergerakan diperiksa "
+          "terlebih dahulu menggunakan mesin replay seluruh riwayat. Bila "
+          "di titik manapun saldo menjadi negatif, transaksi ditolak dengan "
+          "pesan kesalahan yang jelas, dan database tetap utuh (tidak ada "
+          "penulisan sebagian).")
+figure(doc, SHOT / "19-stok-tolak-negatif.png",
+       "Contoh penolakan transaksi keluar yang melebihi sisa stok; database "
+       "tidak berubah karena validasi dilakukan sebelum penulisan.",
+       width_cm=15.5)
+para(doc, "Aturan validasi yang berlaku:", bold=True, justify=False)
+bullet(doc, "Keluar dengan kuantitas melebihi sisa ditolak.")
+bullet(doc, "Edit pergerakan yang membuat saldo negatif pada titik manapun "
+            "di riwayat ditolak; nilai lama tetap tersimpan.")
+bullet(doc, "Hapus pergerakan yang membuat saldo negatif pada titik manapun "
+            "di riwayat ditolak.")
+bullet(doc, "Pergerakan divalidasi secara kronologis menggunakan metode "
+            "harga rata-rata bergerak, sehingga nilai keluar selalu "
+            "konsisten dengan rata-rata historis saat itu.")
+
+page_break(doc)
+
 # ===== BAB III PENUTUP =====
 h1(doc, "BAB III  PENUTUP")
 
