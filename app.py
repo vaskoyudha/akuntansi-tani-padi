@@ -27,6 +27,7 @@ import pages_reports_a
 import pages_reports_b
 import pages_reports_c
 import pages_reports_d
+import pages_stok
 import ui_helpers
 
 
@@ -56,6 +57,7 @@ def get_conn():
     conn = db.create_connection()
     db.create_tables(conn)
     db.seed_database(conn)
+    db.seed_stok(conn)
     auth.seed_default_user(conn)
     return conn
 
@@ -77,6 +79,7 @@ MENU = [
     "10. Jurnal Penutup",
     "11. NS Setelah Penutupan",
     "✏️ Input Transaksi",
+    "📦 Stok/Persediaan",
 ]
 
 
@@ -146,6 +149,8 @@ def _dispatch(pilihan, conn, data):
         pages_reports_d.render_ns_penutupan(data)
     elif pilihan == "✏️ Input Transaksi":
         pages_input.render_input(conn)
+    elif pilihan == "📦 Stok/Persediaan":
+        pages_stok.render_stok(conn)
 
 
 # ---------------------------------------------------------------------------
