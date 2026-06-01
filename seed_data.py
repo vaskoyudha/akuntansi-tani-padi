@@ -104,3 +104,59 @@ def get_jurnal_seed():
         _entry("T20", "2025-04-30", "Alokasi keuntungan ke tabungan keluarga (prive)",
                [_line("312", debit="4500000"), _line("111", kredit="4500000")]),
     ]
+
+
+# ---------------------------------------------------------------------------
+# Seed Stok / Persediaan (Wave 1) — murni data, penulisan DB ditangani task lain
+# ---------------------------------------------------------------------------
+def _gerakan(item, tanggal, qty, harga_satuan, ref, keterangan, tipe="masuk"):
+    """Helper membuat satu baris pergerakan stok (qty/harga sebagai TEXT Decimal)."""
+    return {
+        "item": item,
+        "tanggal": tanggal,
+        "tipe": tipe,
+        "qty": qty,
+        "harga_satuan": harga_satuan,
+        "ref": ref,
+        "keterangan": keterangan,
+    }
+
+
+def get_stok_item_seed():
+    """Daftar item persediaan awal. stok_min sebagai TEXT Decimal (string)."""
+    return [
+        {"nama": "Benih", "kategori": "Benih", "satuan": "kg", "stok_min": "10"},
+        {"nama": "Pupuk", "kategori": "Pupuk", "satuan": "kg", "stok_min": "20"},
+        {"nama": "Pestisida", "kategori": "Pestisida", "satuan": "liter", "stok_min": "2"},
+        {"nama": "Karung", "kategori": "Karung", "satuan": "lembar", "stok_min": "10"},
+    ]
+
+
+def get_stok_gerakan_seed():
+    """Pergerakan stok masuk yang diturunkan dari transaksi (harga_satuan = nominal/qty eksak)."""
+    return [
+        # Benih — T02 (500000 / 50 = 10000)
+        _gerakan("Benih", "2025-01-07", "50", "10000", "T02",
+                 "Pembelian benih padi Mekongga 10 kantong (50 kg)"),
+        # Pupuk — T04 Urea (400000 / 80 = 5000)
+        _gerakan("Pupuk", "2025-01-12", "80", "5000", "T04",
+                 "Pembelian pupuk Urea Pusri gelombang pertama"),
+        # Pupuk — T05 TSP (300000 / 50 = 6000)
+        _gerakan("Pupuk", "2025-01-13", "50", "6000", "T05",
+                 "Pembelian pupuk TSP untuk dasar tanaman"),
+        # Pupuk — T06 ZA (200000 / 40 = 5000)
+        _gerakan("Pupuk", "2025-01-14", "40", "5000", "T06",
+                 "Pembelian pupuk ZA sebagai campuran tambahan"),
+        # Pestisida — T09 (200000 / 10 = 20000)
+        _gerakan("Pestisida", "2025-02-05", "10", "20000", "T09",
+                 "Pembelian pestisida tahap pertama (antisipasi hama)"),
+        # Pestisida — T11 (200000 / 10 = 20000)
+        _gerakan("Pestisida", "2025-02-25", "10", "20000", "T11",
+                 "Pembelian obat-obatan tanaman susulan"),
+        # Pestisida — T12 (100000 / 5 = 20000)
+        _gerakan("Pestisida", "2025-03-10", "5", "20000", "T12",
+                 "Pembelian pestisida/vitamin jelang masa bunting padi"),
+        # Karung — T16 (100000 / 50 = 2000)
+        _gerakan("Karung", "2025-04-19", "50", "2000", "T16",
+                 "Pembelian karung gabah 50 lembar tunai"),
+    ]
